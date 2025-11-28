@@ -1,0 +1,24 @@
+{
+  "name": "npci-git-leak",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^4.18.2",
+    "fs-extra": "^11.2.0",
+    "is-binary-path": "^2.1.0",
+    "mongoose": "^9.0.0",
+    "simple-git": "^3.22.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^9.0.1"
+  }
+}

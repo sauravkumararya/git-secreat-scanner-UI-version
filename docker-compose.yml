@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # 1. Your Node.js Security Scanner
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      # 'mongo' here refers to the service name defined below
+      - MONGO_URI=mongodb://mongo:27017/securityscanner
+    depends_on:
+      - mongo
+    restart: always
+
+  # 2. Local MongoDB Instance
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      # Persist data so you don't lose it when container stops
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

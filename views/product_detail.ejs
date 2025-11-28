@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Report: <%= productName %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; }
+        .navbar { background-color: #161b22; border-bottom: 1px solid #30363d; }
+        .card { background-color: #161b22; border: 1px solid #30363d; }
+        
+        /* Code Snippet Styling */
+        .code-snippet { 
+            background: #0d1117; 
+            border-left: 4px solid #f85149; 
+            color: #e6edf3;
+            padding: 12px; 
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; 
+            font-size: 0.85em; 
+            word-break: break-all;
+            border-radius: 4px;
+        }
+        
+        /* Accordion Dark Overrides */
+        .accordion-item { background-color: #161b22; border-color: #30363d; }
+        .accordion-button { background-color: #21262d; color: #c9d1d9; }
+        .accordion-button:not(.collapsed) { background-color: #30363d; color: #58a6ff; box-shadow: none; }
+    </style>
+</head>
+<body class="bg-dark">
+    <nav class="navbar navbar-dark mb-4">
+        <div class="container">
+            <a class="btn btn-outline-secondary btn-sm" href="/dashboard">← Back to Dashboard</a>
+            <span class="navbar-text text-light">Product: <strong class="text-primary"><%= productName %></strong></span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <% if (scans.length === 0) { %>
+            <div class="alert alert-secondary border-secondary bg-dark text-muted">No scans found for this product.</div>
+        <% } %>
+
+        <% scans.forEach(scan => { %>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center 
+                    <%= scan.status === 'Failed' ? 'bg-danger bg-opacity-10 border-danger border-bottom' : 
+                       (scan.totalIssues > 0 ? 'bg-danger bg-opacity-25 border-danger border-bottom' : 'bg-success bg-opacity-25 border-success border-bottom') %>">
+                    
+                    <span class="<%= scan.status === 'Failed' || scan.totalIssues > 0 ? 'text-danger' : 'text-success' %>">
+                        <strong>Repository:</strong> <%= scan.repository %> 
+                        <span class="mx-2 text-secondary">|</span> 
+                        <small class="text-muted">ID: <%= scan.scanId.substring(0,8) %>...</small>
+                    </span>
+                    <span class="text-secondary small"><%= new Date(scan.timestamp).toLocaleString() %></span>
+                </div>
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">
+                            Found: <span class="<%= scan.totalIssues > 0 ? 'text-danger' : 'text-white' %>"><%= scan.totalIssues %> Secrets</span>
+                        </h5>
+                        <% if (scan.status === 'Failed') { %>
+                            <span class="badge bg-danger">Scan Failed</span>
+                        <% } else if (scan.totalIssues > 0) { %>
+                            <span class="badge bg-danger">High Risk</span>
+                        <% } else { %>
+                            <span class="badge bg-success">Secure</span>
+                        <% } %>
+                    </div>
+                    
+                    <% if (scan.status === 'Failed') { %>
+                        <div class="alert alert-dark border-danger text-danger">
+                            <strong>Error:</strong> <%= scan.error %>
+                        </div>
+                    <% } else if (scan.totalIssues > 0) { %>
+                        <div class="accordion" id="accordion-<%= scan.scanId %>">
+                            <% scan.details.forEach((file, index) => { %>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= scan.scanId %>-<%= index %>">
+                                            <span>📄 <%= file.file %></span>
+                                            <span class="badge bg-danger ms-auto"><%= file.findings.length %></span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-<%= scan.scanId %>-<%= index %>" class="accordion-collapse collapse" data-bs-parent="#accordion-<%= scan.scanId %>">
+                                        <div class="accordion-body">
+                                            <% file.findings.forEach(finding => { %>
+                                                <div class="mb-3 border-bottom border-secondary pb-3">
+                                                    <div class="d-flex justify-content-between">
+                                                        <strong class="text-danger"><%= finding.type %></strong>
+                                                        <span class="text-muted small">Line <%= finding.line %></span>
+                                                    </div>
+                                                    <div class="code-snippet mt-2"><%= finding.snippet %></div>
+                                                </div>
+                                            <% }) %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
