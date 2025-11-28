@@ -199,7 +199,7 @@ For any queries or improvements, feel free to connect or raise an issue.
 After running the project, take a screenshot and add it here:
 
 ```markdown
-![Dashboard Preview](./assets/dashboard-preview.png)
+![Dashboard Preview](https://i.ibb.co/Qvhckjtr/Screenshot-2025-11-28-at-5-23-32-PM.jpg)
 ```
 
 ---
