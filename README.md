@@ -187,6 +187,13 @@ This project is licensed under the **MIT License**.
 
 ---
 
+## 👨‍💻 Author
+
+**Designed & Developed by _Saurav Kumar Arya_**  
+For any queries or improvements, feel free to connect or raise an issue.
+
+---
+
 ## 📸 Optional: Dashboard Screenshot
 
 After running the project, take a screenshot and add it here:
